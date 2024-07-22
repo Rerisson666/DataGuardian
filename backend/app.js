@@ -1,19 +1,17 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/userRoutes');
-const db = require('./config/dbConfig');
 
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
-app.use('/api/users', userRoutes);
 
-const PORT = process.env.PORT || 5000;
+app.use('/users', userRoutes);
 
-db.connect((err) => {
-  if (err) throw err;
-  console.log('Connected to the database');
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
+app.get('/', (req, res) => {
+  res.send('API do DataGuardian');
 });
+
+module.exports = app;

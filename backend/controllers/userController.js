@@ -1,23 +1,13 @@
-const User = require('../models/userModel');
+const pool = require('../config/dbConfig');
 
-exports.getAllUsers = (req, res) => {
-  User.getAll((users) => {
-    res.json(users);
-  });
-};
-
-exports.getUserById = (req, res) => {
-  User.getById(req.params.id, (user) => {
-    if (!user) return res.status(404).send('User not found');
-    res.json(user);
-  });
-};
-
-exports.createUser = (req, res) => {
-  const newUser = req.body;
-  User.create(newUser, (insertId) => {
-    res.status(201).json({ id: insertId });
-  });
+exports.getUsers = async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM users');
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro no servidor');
+  }
 };
 
 exports.updateUser = (req, res) => {
